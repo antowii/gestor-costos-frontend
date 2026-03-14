@@ -1,0 +1,130 @@
+:host {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #ecf0f1;
+  background-color: #1e1e2f;
+  display: block;
+  min-height: 100vh;
+}
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #7a93ac;
+  margin-bottom: 5px;
+}
+
+.header p {
+  color: #7a93ac;
+  margin-top: 0;
+}
+
+.card {
+  background: #60607e;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.summary-cards {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-cards .card {
+  flex: 1;
+  text-align: center;
+  border-left: 5px solid;
+}
+
+.card.total { border-color: #2ecc71; }
+.card.count { border-color: #3498db; }
+
+.summary-cards h3 { margin: 0; font-size: 1.1rem; color: #ffffff; }
+.summary-cards .number { margin: 10px 0 0; font-size: 2rem; font-weight: bold; color: #000000; }
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.btn-primary {
+  width: 100%;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover:not([disabled]) { background-color: #2980b9; }
+.btn-primary[disabled] { background-color: #bdc3c7; cursor: not-allowed; }
+
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-danger:hover { background-color: #c0392b; }
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modern-table th, .modern-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.modern-table th { background-color: #f8f9fa; color: #7f8c8d; }
+.font-bold { font-weight: bold; }
+.empty-state { text-align: center; color: #fbffff; padding: 20px !important; }
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .main-content { grid-template-columns: 1fr; }
+  .summary-cards { flex-direction: column; }
+}
