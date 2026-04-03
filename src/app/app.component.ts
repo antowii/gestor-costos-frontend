@@ -19,9 +19,12 @@ interface Ingrediente {
 export class AppComponent implements OnInit {
   // Implementamos OnInit (Al Iniciar)
 
+  // --- ZONA DE VARIABLES (ESTADO) ---
   // 1. Iniciamos la lista VACÍA. ¡Ya no hay datos falsos!
   misCompras: Ingrediente[] = [];
   nuevoIngrediente: Ingrediente = { nombre: '', precioTotal: 0 };
+  idEnEdicion: number | null = null;
+  terminoBusqueda: string = '';
 
   // 2. Inyectamos a nuestro cartero para poder usarlo
   private http = inject(HttpClient);
@@ -31,6 +34,7 @@ export class AppComponent implements OnInit {
     this.cargarInventario();
   }
 
+  // --- ZONA DE LECTURA (GET) ---
   // 4. LA GRAN CONEXIÓN: Hacemos un GET a tu Java
   cargarInventario() {
     this.http.get<Ingrediente[]>('http://localhost:8080/inventario').subscribe({
@@ -53,35 +57,75 @@ export class AppComponent implements OnInit {
     return this.misCompras.length;
   }
 
-  guardarCompra() {
-    // 1. Validación del Frontend (El guardia de seguridad de la puerta)
-    if (!this.nuevoIngrediente.nombre || this.nuevoIngrediente.precioTotal <= 0)
-      return;
+  // Getter que devuelve la lista filtrada en tiempo real
+  get ingredientesFiltrados(): Ingrediente[] {
+    //Si el buscador está vacío, mostramos toda la lista
+    if (!this.terminoBusqueda) {
+      return this.misCompras;
+    }
 
-    // 2. Hacemos un POST a tu API de Java enviando el 'nuevoIngrediente'
-    this.http
-      .post<Ingrediente>(
-        'http://localhost:8080/inventario/guardar',
-        this.nuevoIngrediente,
-      )
-      .subscribe({
-        next: (respuestaDeJava) => {
-          // Si Java lo guardó con éxito, recargamos la lista para ver el nuevo producto
-          this.cargarInventario();
+    //Convertimos lo que escribió el usuario a minúsculas
+    const termino = this.terminoBusqueda.toLowerCase();
 
-          // Limpiamos las cajitas del formulario para agregar otro
-          this.nuevoIngrediente = { nombre: '', precioTotal: 0 };
-        },
-        error: (err) => {
-          // Si Java rechaza el paquete (ej: tu error de nombre vacío), lo atrapamos aquí
-          console.error('El Backend rechazó la compra:', err);
-          alert(
-            'Hubo un error al guardar. Revisa que los datos sean correctos.',
-          );
-        },
-      });
+    //Filtramos la lista: solo dejamos los que incluyan el texto buscado
+    return this.misCompras.filter(item =>
+      item.nombre.toLowerCase().includes(termino)
+    );
   }
 
+  
+
+
+  // --- ZONA DE EDICIÓN (NUEVOS MÉTODOS) ---
+  //Carga los datos en el formulario cuando presionamos
+  editarCompra(ingrediente: Ingrediente) {
+    if (ingrediente.id) {
+      this.idEnEdicion = ingrediente.id;
+      //Copiamos los datos a las cajitas del formulario
+      this.nuevoIngrediente = { nombre: ingrediente.nombre, precioTotal: ingrediente.precioTotal };
+    }
+  }
+
+  //Limpia el formulario y sale del modo edición
+  cancelarEdicion() {
+    this.idEnEdicion = null;
+    this.nuevoIngrediente = { nombre: '', precioTotal: 0 };
+  }
+
+  // --- ZONA DE GUARDADO (POST / PUT) ---
+  guardarCompra() {
+    if (!this.nuevoIngrediente.nombre || this.nuevoIngrediente.precioTotal <= 0) return;
+
+    if (this.idEnEdicion) {
+      // MODO EDICIÓN: Hacemos un PUT a tu nueva ruta
+      this.http.put<Ingrediente>(`http://localhost:8080/inventario/editar/${this.idEnEdicion}`, this.nuevoIngrediente)
+        .subscribe({
+          next: () => {
+            this.cargarInventario(); // Recargamos la tabla
+            this.cancelarEdicion();  // Limpiamos todo
+          },
+          error: (err) => {
+            console.error('Error al editar:', err);
+            alert('Error al intentar guardar los cambios.');
+          }
+        });
+    } else {
+      // MODO CREACIÓN: Tu código POST original
+      this.http.post<Ingrediente>('http://localhost:8080/inventario/guardar', this.nuevoIngrediente)
+        .subscribe({
+          next: () => {
+            this.cargarInventario();
+            this.cancelarEdicion();
+          },
+          error: (err) => {
+            console.error('Error al crear:', err);
+            alert('Error al guardar. Revisa los datos.');
+          }
+        });
+    }
+  }
+
+  // --- ZONA DE BORRADO (DELETE) ---
   eliminarCompra(id: number | undefined) {
     if (!id) return; // Si por algún motivo no hay ID, no hacemos nada
 

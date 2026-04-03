@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+:root {
+  --bg-color: #3c6594;
+  --card-bg: #e2e8f0;
+  --text-main: #2e3440;
+  --text-muted: #2e3440;
+  --border-color: #bac5d3;
+  --btn-primary: #3c6594;
+  --btn-secondary: #cbd5e1;
+  --btn-warning: #d08770;
+  --btn-danger: #bf616a;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color); /* ¡Esto fuerza a que todo el fondo cambie! */
+}

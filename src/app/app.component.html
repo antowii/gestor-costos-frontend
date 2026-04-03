@@ -1,7 +1,9 @@
 <div class="dashboard-container">
   <header class="header">
-    <h1>🍪 Gestor de Costos QA</h1>
-    <p>Entorno de Pruebas y Automatización</p>
+    <div class="header-titles">
+      <h1>Gestor de Costos</h1>
+      <p>Entorno de Pruebas y Automatización</p>
+    </div>
   </header>
 
   <div class="summary-cards">
@@ -17,7 +19,9 @@
 
   <div class="main-content">
     <section class="form-section card">
-      <h2>Agregar Ingrediente</h2>
+      <h2 *ngIf="!idEnEdicion">Agregar Ingrediente</h2>
+      <h2 *ngIf="idEnEdicion" class="text-edit">✏️ Editando Ingrediente</h2>
+      
       <form (ngSubmit)="guardarCompra()" #compraForm="ngForm">
         <div class="form-group">
           <label for="nombre">Nombre del Producto *</label>
@@ -29,12 +33,27 @@
           <input type="number" id="precio" name="precioTotal" [(ngModel)]="nuevoIngrediente.precioTotal" required min="1">
         </div>
 
-        <button type="submit" class="btn-primary" [disabled]="!compraForm.form.valid">💾 Guardar en Inventario</button>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="!compraForm.form.valid">
+            {{ idEnEdicion ? '🔄 Actualizar' : '💾 Guardar en Inventario' }}
+          </button>
+          
+          <button type="button" *ngIf="idEnEdicion" class="btn-secondary" (click)="cancelarEdicion()">
+            ❌ Cancelar
+          </button>
+        </div>
       </form>
     </section>
 
     <section class="table-section card">
       <h2>Inventario Actual</h2>
+      <div class="search-container" style="margin-bottom: 20px;">
+        <input 
+          type="text" 
+          [(ngModel)]="terminoBusqueda" 
+          placeholder="🔍 Buscar ingrediente por nombre..." 
+          style="width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color); background-color: #f0f4f8; box-sizing: border-box;">
+      </div>
       <table class="modern-table">
         <thead>
           <tr>
@@ -45,16 +64,22 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of misCompras">
+          <tr *ngFor="let item of ingredientesFiltrados">
             <td>#{{ item.id }}</td>
             <td class="font-bold">{{ item.nombre }}</td>
             <td>${{ item.precioTotal }}</td>
-            <td>
-              <button class="btn-danger" (click)="eliminarCompra(item.id)">🗑️ Borrar</button>
+            <td class="action-buttons">
+              <button class="btn-warning" (click)="editarCompra(item)" title="Editar">✏️ Editar</button>
+              <button class="btn-danger" (click)="eliminarCompra(item.id)" title="Borrar">🗑️ Borrar</button>
             </td>
           </tr>
           <tr *ngIf="misCompras.length === 0">
             <td colspan="4" class="empty-state">No hay ingredientes registrados.</td>
+          </tr>
+          <tr *ngIf="ingredientesFiltrados.length === 0 && misCompras.length > 0">
+            <td colspan="4" class="empty-state" style="color: var(--btn-warning);">
+              🔍 No se encontraron ingredientes con ese nombre.
+            </td>
           </tr>
         </tbody>
       </table>
