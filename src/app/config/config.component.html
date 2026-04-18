@@ -1,0 +1,42 @@
+<div class="section" id="config">
+                <div class="content-header">
+                    <h1>Configuración</h1>
+                    <p>Personaliza tu gestor de costos</p>
+                </div>
+                <div class="content-body">
+                    <h2 class="section-title">Información del negocio</h2>
+                    <div style="margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 12px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; color: #999999; font-weight: 500; margin-bottom: 6px;">Nombre del negocio</label>
+                            <input type="text" value="Mi Pastelería" />
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; color: #999999; font-weight: 500; margin-bottom: 6px;">Moneda</label>
+                            <select>
+                                <option>$ (CLP)</option>
+                                <option>$ (USD)</option>
+                                <option>€ (EUR)</option>
+                            </select>
+                        </div>
+                    </div>
+ 
+                    <h2 class="section-title">Niveles de alerta</h2>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; color: #999999; font-weight: 500; margin-bottom: 6px;">Stock bajo (amarillo)</label>
+                            <input type="number" value="25" />
+                            <p style="font-size: 11px; color: #cccccc; margin: 6px 0 0 0;">Porcentaje del stock máximo</p>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; color: #999999; font-weight: 500; margin-bottom: 6px;">Stock crítico (rojo)</label>
+                            <input type="number" value="10" />
+                            <p style="font-size: 11px; color: #cccccc; margin: 6px 0 0 0;">Porcentaje del stock máximo</p>
+                        </div>
+                    </div>
+ 
+                    <div style="margin-top: 2rem; display: flex; gap: 12px;">
+                        <button class="btn-primary">💾 Guardar cambios</button>
+                        <button class="btn-primary">🔄 Exportar datos</button>
+                    </div>
+                </div>
+            </div>
